@@ -1,22 +1,21 @@
-# 필요한 라이브러리를 임포트합니다. cv2는 비디오처리, easyocr은 텍스트인식, googletrans는 번역에 사용됩니다.
 import cv2
 import easyocr
 from googletrans import Translator
 
-# easyocr 리더를 초기화합니다. 독일어('de')를 인식하도록 설정합니다.
+# easyocr 독일어(de)로 설정
 reader = easyocr.Reader(['de'])
 
-# Google 번역기를 초기화합니다.
+# 구글 번역 라이브러리
 translator = Translator()
 
-# 웹캠을 엽니다. 여기서 0은 기본 웹캠을 가리킵니다.
+# 웹캠 연동 cap-> cv2.VideoCapture(0)
 cap = cv2.VideoCapture(0)
 
-# 프레임율을 60으로 설정합니다. 60프레임은 동작의 흐름을 부드럽고 편안하게 보여줍니다.
+# 프레임 설정 : 60
 desired_fps = 60
 cap.set(cv2.CAP_PROP_FPS, desired_fps)
 
-while True: # 무한루프를 시작합니다. q키를 누를때까지 프레임을 읽고, 프레임에서 텍스트를 인식하고, 출력하는 일을 반복합니다.
+while True: # 루프 -> 프레임
     # 웹캠에서 프레임을 읽습니다. read함수는 성공적으로 프레임을 읽었는지를 나타내는 bool값 ret과 읽은 프레임 frame을 반환합니다.
     ret, frame = cap.read()
     if not ret: # 만약 프레임 읽기가 실패하면 루프를 종료합니다.
