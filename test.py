@@ -1,31 +1,54 @@
 import cv2
+import os
 import easyocr
 from googletrans import Translator
 
 reader = easyocr.Reader(['de'])
 translator = Translator()
 cap = cv2.VideoCapture(0)
-desired_fps = 60
-cap.set(cv2.CAP_PROP_FPS, desired_fps)
 
-while True:
+ocr_result = ''  # 초기화를 반복문 밖으로 이동
+
+while cap.isOpened():
     ret, frame = cap.read()
     if not ret:
         break
+    
+    result_frame = frame.copy()
 
-    result = reader.readtext(frame)
+    if ocr_result:
+        cv2.putText(result_frame, 'German : ' + ocr_result, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+    
+    cv2.imshow('WebCam', result_frame)
 
-    if result:
-        detected_text = result[0][1]
-        translated_text = translator.translate(detected_text, src='de', dest='ko').text
-
-        print("Detected Text (German):", detected_text)
-        print("Translated Text (Korean):", translated_text)
-
-    cv2.imshow('WebCam', frame)
-
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('q'):
         break
+    elif key == ord(' '):
+        # 스페이스바를 누르면 현재 프레임을 저장하고 바로 삭제
+        cv2.imwrite('captured_frame.png', frame)
+        print("Frame captured and saved!")
+        key = cv2.waitKey(0) & 0xFF
+        file_path = 'captured_frame.png'
+
+        image = cv2.imread(file_path)
+        result = reader.readtext(image)
+        ocr_result = ""  # 스페이스바를 눌렀을 때만 초기화
+        if result:
+            for (bbox, text, prob) in result:
+                ocr_result += text
+                (top_left, top_right, bottom_right, bottom_left) = bbox
+                top_left = tuple(map(int, top_left))
+                bottom_right = tuple(map(int, bottom_right))
+
+            print(ocr_result)
+        try:
+            os.remove(file_path)
+            print(f"File '{file_path}' deleted successfully.")
+        except FileNotFoundError:
+            print(f"File '{file_path}' not found.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
 cap.release()
 cv2.destroyAllWindows()
