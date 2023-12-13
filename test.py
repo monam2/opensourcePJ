@@ -1,6 +1,8 @@
 import cv2
 import os
 import easyocr
+import numpy as np
+from PIL import ImageFont, ImageDraw, Image
 from googletrans import Translator
 
 reader = easyocr.Reader(['de'])
@@ -8,6 +10,8 @@ translator = Translator()
 cap = cv2.VideoCapture(0)
 
 ocr_result = ''  # 초기화를 반복문 밖으로 이동
+trans_result = ''
+font = ImageFont.truetype('./LINESeedKR-Rg.ttf', 30)
 
 while cap.isOpened():
     ret, frame = cap.read()
@@ -18,6 +22,13 @@ while cap.isOpened():
 
     if ocr_result:
         cv2.putText(result_frame, 'German : ' + ocr_result, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
+
+        korean_text = 'Korean : ' + trans_result
+
+        img_pil = Image.fromarray(result_frame)
+        draw = ImageDraw.Draw(img_pil)
+        draw.text((10, 70), korean_text, font=font, fill=(255, 0, 0))
+        result_frame = np.array(img_pil)
     
     cv2.imshow('WebCam', result_frame)
 
@@ -34,14 +45,14 @@ while cap.isOpened():
         image = cv2.imread(file_path)
         result = reader.readtext(image)
         ocr_result = ""  # 스페이스바를 눌렀을 때만 초기화
+        trans_result = ''
         if result:
             for (bbox, text, prob) in result:
                 ocr_result += text
-                (top_left, top_right, bottom_right, bottom_left) = bbox
-                top_left = tuple(map(int, top_left))
-                bottom_right = tuple(map(int, bottom_right))
-
             print(ocr_result)
+            tmp = ocr_result.replace(" ", "")
+            trans_result = translator.translate(tmp, src='de', dest='ko').text
+            print(trans_result)
         try:
             os.remove(file_path)
             print(f"File '{file_path}' deleted successfully.")
