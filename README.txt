@@ -33,3 +33,4 @@
     -> gTTS(google TTS) 라이브러리 이용, 번역된 한국어를 TTS로 음성변환해 MP3 파일로 저장
     -> MP3파일의 출력은 pygame을 이용해 수행. 음성 출력 후 pygame 종료.
   - google Cloud의 TTS를 이용하려 했으나, gTTS의 우려했던 딜레이 현상이 없어 gTTS를 사용.
+  실행결과 : https://github.com/monam2/opensourcePJ/blob/main/result/result_12.14.mp4
