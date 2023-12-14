@@ -26,3 +26,10 @@
       -> OpenCV는 한글 문자열을 인식할 수 없으므로, numpy와 Pillow 사용해 이미지로 생성 후 CV2 창에 띄우기
       -> LINESeedKR-Rg.ttf 폰트 추가 (LINE에서 배포한 무료/상업 사용 가능 폰트)
   실행결과 : https://github.com/monam2/opensourcePJ/blob/main/result/result_12.13.PNG
+
+2023.12.14
+- 창우 : test.py 로직 추가
+  - TTS 기능 추가
+    -> gTTS(google TTS) 라이브러리 이용, 번역된 한국어를 TTS로 음성변환해 MP3 파일로 저장
+    -> MP3파일의 출력은 pygame을 이용해 수행. 음성 출력 후 pygame 종료.
+  - google Cloud의 TTS를 이용하려 했으나, gTTS의 우려했던 딜레이 현상이 없어 gTTS를 사용.
