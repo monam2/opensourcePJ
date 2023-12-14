@@ -16,3 +16,13 @@
   - 스페이스바 한번 더 누르면 현재 화면 저장 후 이미지에서 독일어 문자를 찾아 인식한 후 ocr_result에 저장
   - 이미지 삭제 후 프레임 다시 갱신
   - 다음 인식 전까지 이전에 인식한 글자를 화면에 띄움
+
+2023.12.13
+- 창우 : test.py 로직 추가
+  - Attribute 에러 해결 (googletrans, opencv 재설치)
+  - 12.08에 추가한 독일어 인식 후 출력 -> 독일어를 Googletrans로 한국어로 번역해 화면에 띄우는 작업
+      -> googletrans에 입력할 독일어 문자열 ocr_result의 공백을 제거
+  - ocr_result : 독->한 번역 수행 후, 독일어 인식 내용과 함께 한글 번역 내용 출력
+      -> OpenCV는 한글 문자열을 인식할 수 없으므로, numpy와 Pillow 사용해 이미지로 생성 후 CV2 창에 띄우기
+      -> LINESeedKR-Rg.ttf 폰트 추가 (LINE에서 배포한 무료/상업 사용 가능 폰트)
+  실행결과 : https://github.com/monam2/opensourcePJ/blob/main/result/result_12.13.PNG
