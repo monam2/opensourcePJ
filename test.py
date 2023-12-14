@@ -4,6 +4,27 @@ import easyocr
 import numpy as np
 from PIL import ImageFont, ImageDraw, Image
 from googletrans import Translator
+from gtts import gTTS
+import pygame
+
+def play_mp3_file(file_path):
+    pygame.mixer.init()
+    pygame.mixer.music.load(file_path)
+    pygame.mixer.music.play()
+
+    while pygame.mixer.music.get_busy():
+        pygame.time.Clock().tick(10)
+
+    pygame.mixer.quit()
+
+def synthesize_and_play_text(text, lang='ko'):
+    # 번역된 텍스트를 음성으로 변환
+    tts = gTTS(text=text, lang=lang)
+
+    # 음성을 MP3 파일로 저장
+    tts.save('output.mp3')
+
+    play_mp3_file('output.mp3')
 
 reader = easyocr.Reader(['de'])
 translator = Translator()
@@ -53,6 +74,7 @@ while cap.isOpened():
             tmp = ocr_result.replace(" ", "")
             trans_result = translator.translate(tmp, src='de', dest='ko').text
             print(trans_result)
+            synthesize_and_play_text(trans_result)
         try:
             os.remove(file_path)
             print(f"File '{file_path}' deleted successfully.")
