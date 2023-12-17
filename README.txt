@@ -35,3 +35,5 @@
   - google Cloud의 TTS를 이용하려 했으나, gTTS의 우려했던 딜레이 현상이 없어 gTTS를 사용.
   실행결과 : https://github.com/monam2/opensourcePJ/blob/main/result/result_12.14.mp4
 
+2023.12.17
+- 창우 : test.py 가우시안 블러 추가
