@@ -39,7 +39,10 @@ while cap.isOpened():
     if not ret:
         break
     
-    result_frame = frame.copy()
+    # Apply Gaussian blur to the frame
+    blurred_frame = cv2.GaussianBlur(frame, (5, 5), 0)
+
+    result_frame = blurred_frame.copy()
 
     if ocr_result:
         cv2.putText(result_frame, 'German : ' + ocr_result, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
@@ -64,7 +67,8 @@ while cap.isOpened():
         file_path = 'captured_frame.png'
 
         image = cv2.imread(file_path)
-        result = reader.readtext(image)
+        blurred_image = cv2.GaussianBlur(image, (5, 5), 0)
+        result = reader.readtext(blurred_image)
         ocr_result = ""  # 스페이스바를 눌렀을 때만 초기화
         trans_result = ''
         if result:
